@@ -47,12 +47,12 @@ def loadDatabase(fileName):
 #done by splitting the definition into a list and checks each one
 def findCustom(entry, english):
     x = entry.getDefinition()
-    try:
-        x.index(english)
-    except ValueError:
-        return False
-    else:
-        return True
+    y = re.split(", |; |\n", x)
+    for i in y:
+        if(i == english):
+            return True
+
+    return False
     
 
 #checks to see if the entry passed in matches the word from the custom language
@@ -74,7 +74,7 @@ listDict = loadDatabase(filename)
 #if it does, it will print all the data about that word. If not, will tell the user
 #the word was not found
 while(isLeaving == False):
-    print("What word do you want to find?\n")
+    print("What word do you want to find?")
     word = input()
 
     #checks to see if the user wants to exit
