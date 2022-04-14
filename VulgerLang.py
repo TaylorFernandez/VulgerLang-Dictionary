@@ -1,4 +1,5 @@
 import re
+    
 #Stores information about a word in this structure. Has the ability to print out
 #the information about the word, as well as getting important data about the word as well
 class DataEntry:
@@ -8,6 +9,7 @@ class DataEntry:
         self.pronounciation = pronounciation
         self.type = type
         self.definition = definition
+        
     
     #prints all of the information about the word in an easy to read format
     def printData(self):
@@ -62,6 +64,20 @@ def findEnglish(entry, custom):
         return True
     return False    
 
+def translateToLang(data, phrase):
+    words = phrase.split(' ')
+    translatedPhrase = ""
+    for i in words:
+        found = False
+        for x in data:
+            
+            if(findCustom(x,i) == True):
+                translatedPhrase = translatedPhrase + x.getWord() + " "
+                found = True
+        if(found == False):
+                translatedPhrase = translatedPhrase + "<Not found: " + i  + "> "    
+    return translatedPhrase
+
 #tells the program if the user wants to continue running
 isLeaving = False
 
@@ -70,29 +86,37 @@ print("What file do you want to load?\n")
 filename = input()
 listDict = loadDatabase(filename)
 
-#main loop of the program. Requests a word from the user and will find the word if it exists
-#if it does, it will print all the data about that word. If not, will tell the user
-#the word was not found
-while(isLeaving == False):
-    print("What word do you want to find?")
-    word = input()
+mainPart = input("Do you want to find a word or translate a phrase? Enter (find word) or (translate):\n")
 
-    #checks to see if the user wants to exit
-    if(word != "exit"):
-        found = False
-        #runs through every word in the list of entries and tries to find a match
-        for i in listDict:
-            if(findEnglish(i, word) == True):
-                i.printData()
-                found = True
-            elif(findCustom(i, word) == True):
-                i.printData()
-                found = True
+if(mainPart == "translate"):
+    phraseInput = input("What phrase do you want to translate?\n")
+    output = translateToLang(listDict, phraseInput)
+    print(output)
+elif(mainPart == "find word"):
 
-        #if the data is not found, program will tell the user it couldn't find that words
-        if(found == False):
-         print("Error. That word cannot be found!")
-    else:
-        isLeaving = True
-#Prints goodby if the user is exiting the program
-print("goodby!")
+    #main loop of the program. Requests a word from the user and will find the word if it exists
+    #if it does, it will print all the data about that word. If not, will tell the user
+    #the word was not found
+    while(isLeaving == False):
+        print("What word do you want to find?")
+        word = input()
+
+        #checks to see if the user wants to exit
+        if(word != "exit"):
+            found = False
+            #runs through every word in the list of entries and tries to find a match
+            for i in listDict:
+                if(findEnglish(i, word) == True):
+                    i.printData()
+                    found = True
+                elif(findCustom(i, word) == True):
+                    i.printData()
+                    found = True
+
+            #if the data is not found, program will tell the user it couldn't find that words
+            if(found == False):
+                print("Error. That word cannot be found!")
+        else:
+            isLeaving = True
+    #Prints goodby if the user is exiting the program
+    print("goodby!")
